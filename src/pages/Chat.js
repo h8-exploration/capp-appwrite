@@ -1,9 +1,20 @@
 import ChatList from "../components/ChatList";
 import FriendsList from "../components/FriendsList";
 import { useState } from "react";
+import { useEffect } from "react";
 
 export default function Chat() {
 	const [isFriendsList, setIsFriendsList] = useState(false);
+	const [users, setUsers] = useState([]);
+
+	useEffect(() => {
+		fetch("http://localhost:4000/users")
+			.then((resp) => resp.json())
+			.then((data) => setUsers(data.users))
+			.catch((err) => {
+				console.log("🚀 ~ file: Chat.js ~ line 15 ~ useEffect ~ err", err);
+			});
+	}, []);
 
 	return (
 		<div className="container app">
@@ -16,6 +27,7 @@ export default function Chat() {
 					<FriendsList
 						isFriendsList={isFriendsList}
 						setIsFriendsList={setIsFriendsList}
+						users={users}
 					/>
 				</div>
 
