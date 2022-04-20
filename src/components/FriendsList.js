@@ -2,6 +2,8 @@ export default function FriendsList({
 	setIsFriendsList,
 	isFriendsList,
 	users,
+	setReceiver,
+	user,
 }) {
 	return (
 		<div
@@ -38,27 +40,33 @@ export default function FriendsList({
 			</div>
 
 			<div className="row compose-sideBar">
-				{users.map((user) => {
-					return (
-						<div className="row sideBar-body" key={user.$id}>
-							<div className="col-sm-3 col-xs-3 sideBar-avatar">
-								<div className="avatar-icon">
-									<img src={`https://i.pravatar.cc/150?u=${user.email}`} />
-								</div>
-							</div>
-							<div className="col-sm-9 col-xs-9 sideBar-main">
-								<div className="row">
-									<div className="col-sm-8 col-xs-8 sideBar-name">
-										<span className="name-meta">{user.name}</span>
-									</div>
-									<div className="col-sm-4 col-xs-4 pull-right sideBar-time">
-										<span className="time-meta pull-right">18:18 </span>
+				{users
+					.filter((el) => el.$id !== user?.$id)
+					.map((elem) => {
+						return (
+							<div
+								className="row sideBar-body"
+								key={elem.$id}
+								onClick={() => setReceiver(elem)}
+							>
+								<div className="col-sm-3 col-xs-3 sideBar-avatar">
+									<div className="avatar-icon">
+										<img src={`https://i.pravatar.cc/150?u=${elem.email}`} />
 									</div>
 								</div>
+								<div className="col-sm-9 col-xs-9 sideBar-main">
+									<div className="row">
+										<div className="col-sm-8 col-xs-8 sideBar-name">
+											<span className="name-meta">{elem.name}</span>
+										</div>
+										<div className="col-sm-4 col-xs-4 pull-right sideBar-time">
+											<span className="time-meta pull-right">18:18 </span>
+										</div>
+									</div>
+								</div>
 							</div>
-						</div>
-					);
-				})}
+						);
+					})}
 			</div>
 		</div>
 	);

@@ -1,10 +1,10 @@
-export default function ChatList({ setIsFriendsList, isFriendsList }) {
+export default function ChatList({ setIsFriendsList, isFriendsList, user }) {
 	return (
 		<div className="side-one">
 			<div className="row heading">
 				<div className="col-sm-3 col-xs-3 heading-avatar">
 					<div className="heading-avatar-icon">
-						<img src="https://bootdey.com/img/Content/avatar/avatar1.png" />
+						<img src={`https://i.pravatar.cc/150?u=${user?.email}`} />
 					</div>
 				</div>
 				<div className="col-sm-1 col-xs-1  heading-dot  pull-right">
