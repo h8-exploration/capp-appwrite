@@ -1,4 +1,15 @@
-export default function ChatRoom({ receiver }) {
+import { useState } from "react";
+
+export default function ChatRoom({ receiver, onSend }) {
+	const [message, setMessage] = useState("");
+
+	const handleSend = () => {
+		if (message === "") {
+			return alert("pesan tidak boleh kosong");
+		}
+		onSend({ message });
+	};
+
 	return (
 		<>
 			<div className="row heading">
@@ -49,12 +60,18 @@ export default function ChatRoom({ receiver }) {
 					<i className="fa fa-smile-o fa-2x"></i>
 				</div>
 				<div className="col-sm-9 col-xs-9 reply-main">
-					<textarea className="form-control" rows="1" id="comment"></textarea>
+					<textarea
+						className="form-control"
+						rows="1"
+						id="comment"
+						value={message}
+						onChange={(e) => setMessage(e.target.value)}
+					></textarea>
 				</div>
 				<div className="col-sm-1 col-xs-1 reply-recording">
 					<i className="fa fa-microphone fa-2x" aria-hidden="true"></i>
 				</div>
-				<div className="col-sm-1 col-xs-1 reply-send">
+				<div className="col-sm-1 col-xs-1 reply-send" onClick={handleSend}>
 					<i className="fa fa-send fa-2x" aria-hidden="true"></i>
 				</div>
 			</div>

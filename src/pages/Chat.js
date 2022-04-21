@@ -97,6 +97,35 @@ export default function Chat() {
 		}
 	}, [receiver]);
 
+	const handleSendMessage = (payload) => {
+		let promise = appwrite.database.createDocument(
+			"625f26197236a205746e",
+			"unique()",
+			{
+				userIds: [user?.$id, receiver?.$id],
+				userId: user?.$id,
+				text: payload.message,
+				image: "",
+				roomId: "",
+				createdAt: new Date(),
+			}
+		);
+		promise.then(
+			function(response) {
+				console.log(
+					"🚀 ~ file: Chat.js ~ line 114 ~ handleSendMessage ~ response",
+					response
+				);
+			},
+			function(error) {
+				console.log(
+					"🚀 ~ file: Chat.js ~ line 118 ~ handleSendMessage ~ error",
+					error
+				);
+			}
+		);
+	};
+
 	return (
 		<div className="container app">
 			<div className="row app-one">
@@ -106,6 +135,8 @@ export default function Chat() {
 						setIsFriendsList={setIsFriendsList}
 						user={user}
 						rooms={rooms}
+						users={users}
+						setReceiver={setReceiver}
 					/>
 					<FriendsList
 						isFriendsList={isFriendsList}
@@ -117,7 +148,7 @@ export default function Chat() {
 				</div>
 
 				<div className="col-sm-8 conversation">
-					{receiver && <ChatRoom receiver={receiver} />}
+					{receiver && <ChatRoom receiver={receiver} onSend={handleSendMessage} />}
 				</div>
 			</div>
 		</div>
