@@ -25,7 +25,14 @@ export default function Chat() {
 	}, []);
 
 	useEffect(() => {
-		setMessages([newMessage, ...messages]);
+		if (newMessage) {
+			if (
+				newMessage.userIds.includes(user.$id) &&
+				newMessage.userIds.includes(receiver.$id)
+			) {
+				setMessages([newMessage, ...messages]);
+			}
+		}
 	}, [newMessage]);
 
 	useEffect(() => {
