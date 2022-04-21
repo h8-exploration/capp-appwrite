@@ -9,6 +9,7 @@ export default function ChatRoom({ receiver, onSend, messages, user }) {
 			return alert("pesan tidak boleh kosong");
 		}
 		onSend({ text });
+		setText("");
 	};
 
 	return (
@@ -37,16 +38,19 @@ export default function ChatRoom({ receiver, onSend, messages, user }) {
 					</div>
 				</div>
 
-				<div>
-					{messages.map((message) => {
-						if (message.userId === user.$id) {
+				<div style={{ display: "flex", flexDirection: "column-reverse" }}>
+					{messages.map((message, index) => {
+						if (message?.userId === user?.$id) {
 							return (
-								<div className="row message-body" key={message.$id}>
-									<div className="col-sm-12 message-main-sender">
+								<div className="row message-body" key={index}>
+									<div
+										className="col-sm-12 message-main-sender"
+										style={{ height: "auto" }}
+									>
 										<div className="sender">
-											<div className="message-text">{message.text}</div>
+											<div className="message-text">{message?.text}</div>
 											<span className="message-time pull-right">
-												{dayjs(message.createdAt).format("ddd. HH:mm")}
+												{dayjs(message?.createdAt).format("ddd. HH:mm")}
 											</span>
 										</div>
 									</div>
@@ -55,12 +59,15 @@ export default function ChatRoom({ receiver, onSend, messages, user }) {
 						}
 
 						return (
-							<div className="row message-body" key={message.$id}>
-								<div className="col-sm-12 message-main-receiver">
+							<div className="row message-body" key={index}>
+								<div
+									className="col-sm-12 message-main-receiver"
+									style={{ height: "auto" }}
+								>
 									<div className="receiver">
-										<div className="message-text">{message.text}</div>
+										<div className="message-text">{message?.text}</div>
 										<span className="message-time pull-right">
-											{dayjs(message.createdAt).format("ddd. HH:mm")}
+											{dayjs(message?.createdAt).format("ddd. HH:mm")}
 										</span>
 									</div>
 								</div>
