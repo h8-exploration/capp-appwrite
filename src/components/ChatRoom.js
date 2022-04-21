@@ -1,8 +1,16 @@
 import { useState } from "react";
 import dayjs from "dayjs";
+import { useEffect } from "react";
 
 export default function ChatRoom({ receiver, onSend, messages, user }) {
 	const [text, setText] = useState("");
+
+	useEffect(() => {
+		const elem = document.getElementsByClassName("message-body-first");
+		if (elem) {
+			elem?.[0]?.scrollIntoView();
+		}
+	}, [messages]);
 
 	const handleSend = () => {
 		if (text === "") {
@@ -43,11 +51,21 @@ export default function ChatRoom({ receiver, onSend, messages, user }) {
 					</div>
 				</div>
 
-				<div style={{ display: "flex", flexDirection: "column-reverse" }}>
+				<div
+					className="a-msg-container"
+					style={{ display: "flex", flexDirection: "column-reverse" }}
+				>
 					{messages.map((message, index) => {
 						if (message?.userId === user?.$id) {
 							return (
-								<div className="row message-body" key={index}>
+								<div
+									key={index}
+									className={
+										index === 0
+											? "row message-body message-body-first"
+											: "row message-body"
+									}
+								>
 									<div
 										className="col-sm-12 message-main-sender"
 										style={{ height: "auto" }}
@@ -64,7 +82,14 @@ export default function ChatRoom({ receiver, onSend, messages, user }) {
 						}
 
 						return (
-							<div className="row message-body" key={index}>
+							<div
+								className={
+									index === 0
+										? "row message-body message-body-first"
+										: "row message-body"
+								}
+								key={index}
+							>
 								<div
 									className="col-sm-12 message-main-receiver"
 									style={{ height: "auto" }}
