@@ -11,7 +11,10 @@ export default function ChatList({
 			<div className="row heading">
 				<div className="col-sm-3 col-xs-3 heading-avatar">
 					<div className="heading-avatar-icon">
-						<img src={`https://i.pravatar.cc/150?u=${user?.email}`} />
+						<img
+							src={`https://i.pravatar.cc/150?u=${user?.email}`}
+							alt="user-gambar"
+						/>
 					</div>
 				</div>
 				<div className="col-sm-1 col-xs-1  heading-dot  pull-right">
@@ -52,7 +55,10 @@ export default function ChatList({
 							>
 								<div className="col-sm-3 col-xs-3 sideBar-avatar">
 									<div className="avatar-icon">
-										<img src={`https://i.pravatar.cc/150?u=${el.email}`} />
+										<img
+											src={`https://i.pravatar.cc/150?u=${el.email}`}
+											alt="friend-gambar"
+										/>
 									</div>
 								</div>
 								<div className="col-sm-9 col-xs-9 sideBar-main">

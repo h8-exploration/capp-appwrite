@@ -11,7 +11,6 @@ export default function Chat() {
 	const [users, setUsers] = useState([]);
 	const [user, setUser] = useState(null);
 	const [receiver, setReceiver] = useState(null);
-	const [rooms, setRooms] = useState([]);
 	const [messages, setMessages] = useState([]);
 	const [newMessage, setNewMessage] = useState(null);
 
@@ -33,6 +32,7 @@ export default function Chat() {
 				setMessages([newMessage, ...messages]);
 			}
 		}
+		// eslint-disable-next-line
 	}, [newMessage]);
 
 	useEffect(() => {
@@ -54,70 +54,6 @@ export default function Chat() {
 			}
 		);
 	}, []);
-
-	useEffect(() => {
-		if (user) {
-			let promise = appwrite.database.listDocuments("625f2658dbe1156b814e", [
-				Query.search("userIds", [user?.$id]),
-			]);
-			promise.then(
-				function(response) {
-					setRooms(response.documents);
-				},
-				function(error) {
-					console.log(error); // Failure
-				}
-			);
-		}
-	}, [user]);
-
-	useEffect(() => {
-		let promise = appwrite.database.listDocuments("625f2658dbe1156b814e", [
-			Query.search("userIds", [user?.$id]),
-		]);
-		promise.then(
-			function(response) {
-				setRooms(response.documents);
-			},
-			function(error) {
-				console.log(error); // Failure
-			}
-		);
-	}, [receiver]);
-
-	useEffect(() => {
-		if (receiver) {
-			let promise = appwrite.database.listDocuments("625f2658dbe1156b814e", [
-				Query.search("userIds", [user?.$id]),
-				Query.search("userIds", [receiver?.$id]),
-			]);
-			promise.then(
-				function(response) {
-					if (response.documents.length < 1) {
-						let promise = appwrite.database.createDocument(
-							"625f2658dbe1156b814e",
-							"unique()",
-							{
-								name: "",
-								userIds: [user?.$id, receiver?.$id],
-							}
-						);
-						promise.then(
-							function(response) {
-								console.log(response); // Success
-							},
-							function(error) {
-								console.log(error); // Failure
-							}
-						);
-					}
-				},
-				function(error) {
-					console.log(error); // Failure
-				}
-			);
-		}
-	}, [receiver]);
 
 	useEffect(() => {
 		if (user && receiver) {
@@ -143,6 +79,7 @@ export default function Chat() {
 				}
 			);
 		}
+		// eslint-disable-next-line
 	}, [receiver]);
 
 	const handleSendMessage = (payload) => {
@@ -179,7 +116,6 @@ export default function Chat() {
 						isFriendsList={isFriendsList}
 						setIsFriendsList={setIsFriendsList}
 						user={user}
-						rooms={rooms}
 						users={users}
 						setReceiver={setReceiver}
 					/>

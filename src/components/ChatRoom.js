@@ -17,11 +17,16 @@ export default function ChatRoom({ receiver, onSend, messages, user }) {
 			<div className="row heading">
 				<div className="col-sm-2 col-md-1 col-xs-3 heading-avatar">
 					<div className="heading-avatar-icon">
-						<img src={`https://i.pravatar.cc/150?u=${receiver?.email}`} />
+						<img
+							src={`https://i.pravatar.cc/150?u=${receiver?.email}`}
+							alt="receiver-gambar"
+						/>
 					</div>
 				</div>
 				<div className="col-sm-8 col-xs-7 heading-name">
-					<a className="heading-name-meta">{receiver?.name} </a>
+					<a href="#disabled" className="heading-name-meta">
+						{receiver?.name}{" "}
+					</a>
 					<span className="heading-online">Online</span>
 				</div>
 				<div className="col-sm-1 col-xs-1  heading-dot pull-right">
@@ -32,7 +37,7 @@ export default function ChatRoom({ receiver, onSend, messages, user }) {
 			<div className="row message" id="conversation">
 				<div className="row message-previous">
 					<div className="col-sm-12 previous">
-						<a id="ankitjain28" name="20">
+						<a id="ankitjain28" name="20" href="#disabled">
 							Show Previous Message!
 						</a>
 					</div>
