@@ -42,7 +42,7 @@ export default function ChatList({
 
 			<div className="row sideBar">
 				{users
-					.filter((usr) => usr.$id !== user.$id)
+					.filter((usr) => usr?.$id !== user?.$id)
 					.map((el) => {
 						return (
 							<div
@@ -52,7 +52,7 @@ export default function ChatList({
 							>
 								<div className="col-sm-3 col-xs-3 sideBar-avatar">
 									<div className="avatar-icon">
-										<img src="https://bootdey.com/img/Content/avatar/avatar1.png" />
+										<img src={`https://i.pravatar.cc/150?u=${el.email}`} />
 									</div>
 								</div>
 								<div className="col-sm-9 col-xs-9 sideBar-main">

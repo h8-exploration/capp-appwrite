@@ -1,13 +1,14 @@
 import { useState } from "react";
+import dayjs from "dayjs";
 
-export default function ChatRoom({ receiver, onSend }) {
-	const [message, setMessage] = useState("");
+export default function ChatRoom({ receiver, onSend, messages, user }) {
+	const [text, setText] = useState("");
 
 	const handleSend = () => {
-		if (message === "") {
+		if (text === "") {
 			return alert("pesan tidak boleh kosong");
 		}
-		onSend({ message });
+		onSend({ text });
 	};
 
 	return (
@@ -36,22 +37,36 @@ export default function ChatRoom({ receiver, onSend }) {
 					</div>
 				</div>
 
-				<div className="row message-body">
-					<div className="col-sm-12 message-main-receiver">
-						<div className="receiver">
-							<div className="message-text">Hi, what are you doing?!</div>
-							<span className="message-time pull-right">Sun</span>
-						</div>
-					</div>
-				</div>
+				<div>
+					{messages.map((message) => {
+						if (message.userId === user.$id) {
+							return (
+								<div className="row message-body" key={message.$id}>
+									<div className="col-sm-12 message-main-sender">
+										<div className="sender">
+											<div className="message-text">{message.text}</div>
+											<span className="message-time pull-right">
+												{dayjs(message.createdAt).format("ddd. HH:mm")}
+											</span>
+										</div>
+									</div>
+								</div>
+							);
+						}
 
-				<div className="row message-body">
-					<div className="col-sm-12 message-main-sender">
-						<div className="sender">
-							<div className="message-text">I am doing nothing man!</div>
-							<span className="message-time pull-right">Sun</span>
-						</div>
-					</div>
+						return (
+							<div className="row message-body" key={message.$id}>
+								<div className="col-sm-12 message-main-receiver">
+									<div className="receiver">
+										<div className="message-text">{message.text}</div>
+										<span className="message-time pull-right">
+											{dayjs(message.createdAt).format("ddd. HH:mm")}
+										</span>
+									</div>
+								</div>
+							</div>
+						);
+					})}
 				</div>
 			</div>
 
@@ -64,8 +79,8 @@ export default function ChatRoom({ receiver, onSend }) {
 						className="form-control"
 						rows="1"
 						id="comment"
-						value={message}
-						onChange={(e) => setMessage(e.target.value)}
+						value={text}
+						onChange={(e) => setText(e.target.value)}
 					></textarea>
 				</div>
 				<div className="col-sm-1 col-xs-1 reply-recording">

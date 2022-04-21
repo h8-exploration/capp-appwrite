@@ -12,6 +12,21 @@ export default function Chat() {
 	const [user, setUser] = useState(null);
 	const [receiver, setReceiver] = useState(null);
 	const [rooms, setRooms] = useState([]);
+	const [messages, setMessages] = useState([]);
+	const [newMessage, setNewMessage] = useState(null);
+
+	useEffect(() => {
+		appwrite.subscribe(
+			["collections.625f26197236a205746e.documents"],
+			(response) => {
+				setNewMessage(response.payload);
+			}
+		);
+	}, []);
+
+	useEffect(() => {
+		setMessages([newMessage, ...messages]);
+	}, [newMessage]);
 
 	useEffect(() => {
 		fetch("http://localhost:4000/users")
@@ -97,6 +112,32 @@ export default function Chat() {
 		}
 	}, [receiver]);
 
+	useEffect(() => {
+		if (user && receiver) {
+			let promise = appwrite.database.listDocuments(
+				"625f26197236a205746e",
+				[
+					Query.search("userIds", [user?.$id]),
+					Query.search("userIds", [receiver?.$id]),
+				],
+				10,
+				0,
+				"",
+				"",
+				["createdAt"],
+				["DESC"]
+			);
+			promise.then(
+				function(response) {
+					setMessages(response.documents);
+				},
+				function(error) {
+					console.log(error); // Failure
+				}
+			);
+		}
+	}, [receiver]);
+
 	const handleSendMessage = (payload) => {
 		let promise = appwrite.database.createDocument(
 			"625f26197236a205746e",
@@ -104,19 +145,16 @@ export default function Chat() {
 			{
 				userIds: [user?.$id, receiver?.$id],
 				userId: user?.$id,
-				text: payload.message,
+				text: payload.text,
 				image: "",
 				roomId: "",
 				createdAt: new Date(),
-			}
+			},
+			["role:all"],
+			["role:all"]
 		);
 		promise.then(
-			function(response) {
-				console.log(
-					"🚀 ~ file: Chat.js ~ line 114 ~ handleSendMessage ~ response",
-					response
-				);
-			},
+			function(response) {},
 			function(error) {
 				console.log(
 					"🚀 ~ file: Chat.js ~ line 118 ~ handleSendMessage ~ error",
@@ -148,7 +186,14 @@ export default function Chat() {
 				</div>
 
 				<div className="col-sm-8 conversation">
-					{receiver && <ChatRoom receiver={receiver} onSend={handleSendMessage} />}
+					{receiver && (
+						<ChatRoom
+							receiver={receiver}
+							onSend={handleSendMessage}
+							messages={messages}
+							user={user}
+						/>
+					)}
 				</div>
 			</div>
 		</div>
