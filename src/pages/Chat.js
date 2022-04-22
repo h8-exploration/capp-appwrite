@@ -109,6 +109,8 @@ export default function Chat() {
 						);
 					}
 				);
+				setFriends([...friends, receiver]);
+				setUsers(users.filter((el) => el.$id !== receiver.$id));
 			}
 		}
 		// eslint-disable-next-line
@@ -182,6 +184,7 @@ export default function Chat() {
 						isFriendsList={isFriendsList}
 						setIsFriendsList={setIsFriendsList}
 						users={users}
+						friendIds={friendIds}
 						setReceiver={setReceiver}
 						user={user}
 					/>

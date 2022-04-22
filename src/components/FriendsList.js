@@ -4,6 +4,7 @@ export default function FriendsList({
 	users,
 	setReceiver,
 	user,
+	friendIds,
 }) {
 	return (
 		<div
@@ -41,7 +42,13 @@ export default function FriendsList({
 
 			<div className="row compose-sideBar">
 				{users
-					.filter((el) => el.$id !== user?.$id)
+					.filter((el) => {
+						if (el.$id !== user?.$id && friendIds.includes(el.$id) === false) {
+							return true;
+						} else {
+							return false;
+						}
+					})
 					.map((elem) => {
 						return (
 							<div
