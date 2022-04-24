@@ -120,6 +120,27 @@ export default function Chat() {
 						);
 					}
 				);
+
+				let promise2 = appwrite.database.createDocument(
+					"62620047ce5993fba32e",
+					"unique()",
+					{
+						friendId: user?.$id,
+						userId: receiver?.$id,
+						createdAt: new Date(),
+					},
+					["role:all"],
+					["role:all"]
+				);
+				promise2.then(
+					function(response) {},
+					function(error) {
+						console.log(
+							"🚀 ~ file: Chat.js ~ line 118 ~ handleSendMessage ~ error",
+							error
+						);
+					}
+				);
 				setFriends([...friends, receiver]);
 				setFriendsFiltered([...friendsFiltered, receiver]);
 				setUsers(users.filter((el) => el.$id !== receiver.$id));
