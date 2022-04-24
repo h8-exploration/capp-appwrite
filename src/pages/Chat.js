@@ -22,7 +22,7 @@ export default function Chat() {
 
 	useEffect(() => {
 		appwrite.subscribe(
-			["collections.625f26197236a205746e.documents"],
+			[`collections.${process.env.REACT_APP_CHATS_COLLECTION_ID}.documents`],
 			(response) => {
 				setNewMessage(response.payload);
 			}
@@ -42,7 +42,7 @@ export default function Chat() {
 	}, [newMessage]);
 
 	useEffect(() => {
-		fetch("http://localhost:4000/users")
+		fetch(`${process.env.REACT_APP_CUSTOM_SERVER_ENDPOINT}/users`)
 			.then((resp) => resp.json())
 			.then((data) => {
 				setUsers(data.users);
@@ -56,7 +56,9 @@ export default function Chat() {
 	useEffect(() => {
 		const _friendIds = friendIds.join();
 		if (_friendIds !== "") {
-			fetch(`http://localhost:4000/users?friendIds=${_friendIds}`)
+			fetch(
+				`${process.env.REACT_APP_CUSTOM_SERVER_ENDPOINT}/users?friendIds=${_friendIds}`
+			)
 				.then((resp) => resp.json())
 				.then((data) => {
 					setFriends(data.users);
@@ -82,9 +84,10 @@ export default function Chat() {
 
 	useEffect(() => {
 		if (user) {
-			let promise = appwrite.database.listDocuments("62620047ce5993fba32e", [
-				Query.search("userId", [user?.$id]),
-			]);
+			let promise = appwrite.database.listDocuments(
+				process.env.REACT_APP_FRIENDS_COLLECTION_ID,
+				[Query.search("userId", [user?.$id])]
+			);
 			promise.then(
 				function(response) {
 					const _friendIds = response.documents.map((doc) => doc.friendId);
@@ -101,7 +104,7 @@ export default function Chat() {
 		if (receiver) {
 			if (!friendIds.includes(receiver.$id)) {
 				let promise = appwrite.database.createDocument(
-					"62620047ce5993fba32e",
+					process.env.REACT_APP_FRIENDS_COLLECTION_ID,
 					"unique()",
 					{
 						friendId: receiver?.$id,
@@ -122,7 +125,7 @@ export default function Chat() {
 				);
 
 				let promise2 = appwrite.database.createDocument(
-					"62620047ce5993fba32e",
+					process.env.REACT_APP_FRIENDS_COLLECTION_ID,
 					"unique()",
 					{
 						friendId: user?.$id,
@@ -153,7 +156,7 @@ export default function Chat() {
 	useEffect(() => {
 		if (user && receiver) {
 			let promise = appwrite.database.listDocuments(
-				"625f26197236a205746e",
+				process.env.REACT_APP_CHATS_COLLECTION_ID,
 				[
 					Query.search("userIds", [user?.$id]),
 					Query.search("userIds", [receiver?.$id]),
@@ -195,7 +198,7 @@ export default function Chat() {
 
 	const handleSendMessage = (payload) => {
 		let promise = appwrite.database.createDocument(
-			"625f26197236a205746e",
+			process.env.REACT_APP_CHATS_COLLECTION_ID,
 			"unique()",
 			{
 				userIds: [user?.$id, receiver?.$id],

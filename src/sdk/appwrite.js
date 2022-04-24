@@ -4,7 +4,7 @@ import { Appwrite } from "appwrite";
 const appwrite = new Appwrite();
 
 appwrite
-	.setEndpoint("http://localhost/v1") // Your Appwrite Endpoint
-	.setProject("625f260b9bfb71c1d299"); // Your project ID
+	.setEndpoint(process.env.REACT_APP_PROJECT_ENDPOINT) // Your Appwrite Endpoint
+	.setProject(process.env.REACT_APP_PROJECT_ID); // Your project ID
 
 export default appwrite;
