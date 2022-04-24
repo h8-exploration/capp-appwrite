@@ -74,7 +74,7 @@ export default function FriendsList({
 											<span className="name-meta">{elem.name}</span>
 										</div>
 										<div className="col-sm-4 col-xs-4 pull-right sideBar-time">
-											<span className="time-meta pull-right">18:18 </span>
+											{/* <span className="time-meta pull-right">18:18 </span> */}
 										</div>
 									</div>
 								</div>

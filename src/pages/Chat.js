@@ -17,6 +17,8 @@ export default function Chat() {
 	const [newMessage, setNewMessage] = useState(null);
 	const [friendIds, setFriendIds] = useState([]);
 	const [friends, setFriends] = useState([]);
+	const [friendsFiltered, setFriendsFiltered] = useState([]);
+	const [friendsInput, setFriendsInput] = useState("");
 
 	useEffect(() => {
 		appwrite.subscribe(
@@ -58,6 +60,7 @@ export default function Chat() {
 				.then((resp) => resp.json())
 				.then((data) => {
 					setFriends(data.users);
+					setFriendsFiltered(data.users);
 				})
 				.catch((err) => {
 					console.log("🚀 ~ file: Chat.js ~ line 15 ~ useEffect ~ err", err);
@@ -118,6 +121,7 @@ export default function Chat() {
 					}
 				);
 				setFriends([...friends, receiver]);
+				setFriendsFiltered([...friendsFiltered, receiver]);
 				setUsers(users.filter((el) => el.$id !== receiver.$id));
 				setUsersFiltered(users.filter((el) => el.$id !== receiver.$id));
 			}
@@ -160,6 +164,14 @@ export default function Chat() {
 		// eslint-disable-next-line
 	}, [usersInput]);
 
+	useEffect(() => {
+		const _friendsFiltered = friends.filter(
+			(item) => item.name.toLowerCase().indexOf(friendsInput) >= 0
+		);
+		setFriendsFiltered(_friendsFiltered);
+		// eslint-disable-next-line
+	}, [friendsInput]);
+
 	const handleSendMessage = (payload) => {
 		let promise = appwrite.database.createDocument(
 			"625f26197236a205746e",
@@ -194,8 +206,10 @@ export default function Chat() {
 						isFriendsList={isFriendsList}
 						setIsFriendsList={setIsFriendsList}
 						user={user}
-						users={friends}
+						users={friendsFiltered}
 						setReceiver={setReceiver}
+						friendsInput={friendsInput}
+						setFriendsInput={setFriendsInput}
 					/>
 					<FriendsList
 						isFriendsList={isFriendsList}

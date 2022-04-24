@@ -5,6 +5,8 @@ export default function ChatList({
 	rooms,
 	users,
 	setReceiver,
+	friendsInput,
+	setFriendsInput,
 }) {
 	return (
 		<div className="side-one">
@@ -37,6 +39,8 @@ export default function ChatList({
 							className="form-control"
 							name="searchText"
 							placeholder="Search"
+							value={friendsInput}
+							onChange={(e) => setFriendsInput(e.target.value)}
 						/>
 						<span className="glyphicon glyphicon-search form-control-feedback"></span>
 					</div>
