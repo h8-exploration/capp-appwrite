@@ -13,6 +13,8 @@ export default function Chat() {
 	const [receiver, setReceiver] = useState(null);
 	const [messages, setMessages] = useState([]);
 	const [newMessage, setNewMessage] = useState(null);
+	const [friendIds, setFriendIds] = useState([]);
+	const [friends, setFriends] = useState([]);
 
 	useEffect(() => {
 		appwrite.subscribe(
@@ -42,9 +44,21 @@ export default function Chat() {
 			.catch((err) => {
 				console.log("🚀 ~ file: Chat.js ~ line 15 ~ useEffect ~ err", err);
 			});
+	}, []);
 
+	useEffect(() => {
+		fetch(`http://localhost:4000/users?friendIds=${friendIds.join()}`)
+			.then((resp) => resp.json())
+			.then((data) => {
+				setFriends(data.users);
+			})
+			.catch((err) => {
+				console.log("🚀 ~ file: Chat.js ~ line 15 ~ useEffect ~ err", err);
+			});
+	}, [friendIds]);
+
+	useEffect(() => {
 		let promise = appwrite.account.get();
-
 		promise.then(
 			function(response) {
 				setUser(response);
@@ -54,6 +68,53 @@ export default function Chat() {
 			}
 		);
 	}, []);
+
+	useEffect(() => {
+		if (user) {
+			let promise = appwrite.database.listDocuments("62620047ce5993fba32e", [
+				Query.search("userId", [user?.$id]),
+			]);
+			promise.then(
+				function(response) {
+					const _friendIds = response.documents.map((doc) => doc.friendId);
+					setFriendIds(_friendIds);
+				},
+				function(error) {
+					console.log(error); // Failure
+				}
+			);
+		}
+	}, [user]);
+
+	useEffect(() => {
+		if (receiver) {
+			if (!friendIds.includes(receiver.$id)) {
+				let promise = appwrite.database.createDocument(
+					"62620047ce5993fba32e",
+					"unique()",
+					{
+						friendId: receiver?.$id,
+						userId: user?.$id,
+						createdAt: new Date(),
+					},
+					["role:all"],
+					["role:all"]
+				);
+				promise.then(
+					function(response) {},
+					function(error) {
+						console.log(
+							"🚀 ~ file: Chat.js ~ line 118 ~ handleSendMessage ~ error",
+							error
+						);
+					}
+				);
+				setFriends([...friends, receiver]);
+				setUsers(users.filter((el) => el.$id !== receiver.$id));
+			}
+		}
+		// eslint-disable-next-line
+	}, [receiver]);
 
 	useEffect(() => {
 		if (user && receiver) {
@@ -116,13 +177,14 @@ export default function Chat() {
 						isFriendsList={isFriendsList}
 						setIsFriendsList={setIsFriendsList}
 						user={user}
-						users={users}
+						users={friends}
 						setReceiver={setReceiver}
 					/>
 					<FriendsList
 						isFriendsList={isFriendsList}
 						setIsFriendsList={setIsFriendsList}
 						users={users}
+						friendIds={friendIds}
 						setReceiver={setReceiver}
 						user={user}
 					/>

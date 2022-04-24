@@ -4,6 +4,7 @@ export default function FriendsList({
 	users,
 	setReceiver,
 	user,
+	friendIds,
 }) {
 	return (
 		<div
@@ -41,7 +42,13 @@ export default function FriendsList({
 
 			<div className="row compose-sideBar">
 				{users
-					.filter((el) => el.$id !== user?.$id)
+					.filter((el) => {
+						if (el.$id !== user?.$id && friendIds.includes(el.$id) === false) {
+							return true;
+						} else {
+							return false;
+						}
+					})
 					.map((elem) => {
 						return (
 							<div
@@ -51,7 +58,10 @@ export default function FriendsList({
 							>
 								<div className="col-sm-3 col-xs-3 sideBar-avatar">
 									<div className="avatar-icon">
-										<img src={`https://i.pravatar.cc/150?u=${elem.email}`} />
+										<img
+											src={`https://i.pravatar.cc/150?u=${elem.email}`}
+											alt="user-gambar"
+										/>
 									</div>
 								</div>
 								<div className="col-sm-9 col-xs-9 sideBar-main">
