@@ -5,6 +5,8 @@ export default function FriendsList({
 	setReceiver,
 	user,
 	friendIds,
+	usersInput,
+	setUsersInput,
 }) {
 	return (
 		<div
@@ -34,6 +36,8 @@ export default function FriendsList({
 							className="form-control"
 							name="searchText"
 							placeholder="Search People"
+							onChange={(e) => setUsersInput(e.target.value)}
+							value={usersInput}
 						/>
 						<span className="glyphicon glyphicon-search form-control-feedback"></span>
 					</div>
