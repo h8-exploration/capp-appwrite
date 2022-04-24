@@ -9,12 +9,16 @@ import { Query } from "appwrite";
 export default function Chat() {
 	const [isFriendsList, setIsFriendsList] = useState(false);
 	const [users, setUsers] = useState([]);
+	const [usersFiltered, setUsersFiltered] = useState([]);
+	const [usersInput, setUsersInput] = useState("");
 	const [user, setUser] = useState(null);
 	const [receiver, setReceiver] = useState(null);
 	const [messages, setMessages] = useState([]);
 	const [newMessage, setNewMessage] = useState(null);
 	const [friendIds, setFriendIds] = useState([]);
 	const [friends, setFriends] = useState([]);
+	const [friendsFiltered, setFriendsFiltered] = useState([]);
+	const [friendsInput, setFriendsInput] = useState("");
 
 	useEffect(() => {
 		appwrite.subscribe(
@@ -40,21 +44,28 @@ export default function Chat() {
 	useEffect(() => {
 		fetch("http://localhost:4000/users")
 			.then((resp) => resp.json())
-			.then((data) => setUsers(data.users))
+			.then((data) => {
+				setUsers(data.users);
+				setUsersFiltered(data.users);
+			})
 			.catch((err) => {
 				console.log("🚀 ~ file: Chat.js ~ line 15 ~ useEffect ~ err", err);
 			});
 	}, []);
 
 	useEffect(() => {
-		fetch(`http://localhost:4000/users?friendIds=${friendIds.join()}`)
-			.then((resp) => resp.json())
-			.then((data) => {
-				setFriends(data.users);
-			})
-			.catch((err) => {
-				console.log("🚀 ~ file: Chat.js ~ line 15 ~ useEffect ~ err", err);
-			});
+		const _friendIds = friendIds.join();
+		if (_friendIds !== "") {
+			fetch(`http://localhost:4000/users?friendIds=${_friendIds}`)
+				.then((resp) => resp.json())
+				.then((data) => {
+					setFriends(data.users);
+					setFriendsFiltered(data.users);
+				})
+				.catch((err) => {
+					console.log("🚀 ~ file: Chat.js ~ line 15 ~ useEffect ~ err", err);
+				});
+		}
 	}, [friendIds]);
 
 	useEffect(() => {
@@ -110,7 +121,9 @@ export default function Chat() {
 					}
 				);
 				setFriends([...friends, receiver]);
+				setFriendsFiltered([...friendsFiltered, receiver]);
 				setUsers(users.filter((el) => el.$id !== receiver.$id));
+				setUsersFiltered(users.filter((el) => el.$id !== receiver.$id));
 			}
 		}
 		// eslint-disable-next-line
@@ -142,6 +155,22 @@ export default function Chat() {
 		}
 		// eslint-disable-next-line
 	}, [receiver]);
+
+	useEffect(() => {
+		const _usersFiltered = users.filter(
+			(item) => item.name.toLowerCase().indexOf(usersInput) >= 0
+		);
+		setUsersFiltered(_usersFiltered);
+		// eslint-disable-next-line
+	}, [usersInput]);
+
+	useEffect(() => {
+		const _friendsFiltered = friends.filter(
+			(item) => item.name.toLowerCase().indexOf(friendsInput) >= 0
+		);
+		setFriendsFiltered(_friendsFiltered);
+		// eslint-disable-next-line
+	}, [friendsInput]);
 
 	const handleSendMessage = (payload) => {
 		let promise = appwrite.database.createDocument(
@@ -177,16 +206,20 @@ export default function Chat() {
 						isFriendsList={isFriendsList}
 						setIsFriendsList={setIsFriendsList}
 						user={user}
-						users={friends}
+						users={friendsFiltered}
 						setReceiver={setReceiver}
+						friendsInput={friendsInput}
+						setFriendsInput={setFriendsInput}
 					/>
 					<FriendsList
 						isFriendsList={isFriendsList}
 						setIsFriendsList={setIsFriendsList}
-						users={users}
+						users={usersFiltered}
 						friendIds={friendIds}
 						setReceiver={setReceiver}
 						user={user}
+						usersInput={usersInput}
+						setUsersInput={setUsersInput}
 					/>
 				</div>
 
