@@ -116,6 +116,7 @@ export default function Chat() {
 				);
 				setFriends([...friends, receiver]);
 				setUsers(users.filter((el) => el.$id !== receiver.$id));
+				setUsersFiltered(users.filter((el) => el.$id !== receiver.$id));
 			}
 		}
 		// eslint-disable-next-line
