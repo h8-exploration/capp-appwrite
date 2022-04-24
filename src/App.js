@@ -1,11 +1,18 @@
 import { Routes, Route } from "react-router-dom";
 import { Login, Register, Chat } from "./pages";
-// import "./assets/style.css";
+import RouteProtector from "./components/RouteProtector";
 
 function App() {
 	return (
 		<Routes>
-			<Route path="/" element={<Chat />} />
+			<Route
+				path="/"
+				element={
+					<RouteProtector>
+						<Chat />
+					</RouteProtector>
+				}
+			/>
 			<Route path="/login" element={<Login />} />
 			<Route path="/register" element={<Register />} />
 		</Routes>
