@@ -10,7 +10,7 @@ export default function Chat() {
 	const [isFriendsList, setIsFriendsList] = useState(false);
 	const [users, setUsers] = useState([]);
 	const [usersFiltered, setUsersFiltered] = useState([]);
-	const [usersInput, setUsersInput] = useState("tets");
+	const [usersInput, setUsersInput] = useState("");
 	const [user, setUser] = useState(null);
 	const [receiver, setReceiver] = useState(null);
 	const [messages, setMessages] = useState([]);
@@ -52,14 +52,17 @@ export default function Chat() {
 	}, []);
 
 	useEffect(() => {
-		fetch(`http://localhost:4000/users?friendIds=${friendIds.join()}`)
-			.then((resp) => resp.json())
-			.then((data) => {
-				setFriends(data.users);
-			})
-			.catch((err) => {
-				console.log("🚀 ~ file: Chat.js ~ line 15 ~ useEffect ~ err", err);
-			});
+		const _friendIds = friendIds.join();
+		if (_friendIds !== "") {
+			fetch(`http://localhost:4000/users?friendIds=${_friendIds}`)
+				.then((resp) => resp.json())
+				.then((data) => {
+					setFriends(data.users);
+				})
+				.catch((err) => {
+					console.log("🚀 ~ file: Chat.js ~ line 15 ~ useEffect ~ err", err);
+				});
+		}
 	}, [friendIds]);
 
 	useEffect(() => {
@@ -154,6 +157,7 @@ export default function Chat() {
 			(item) => item.name.toLowerCase().indexOf(usersInput) >= 0
 		);
 		setUsersFiltered(_usersFiltered);
+		// eslint-disable-next-line
 	}, [usersInput]);
 
 	const handleSendMessage = (payload) => {
