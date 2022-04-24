@@ -1,6 +1,7 @@
 import { Routes, Route } from "react-router-dom";
-import { Login, Register, Chat } from "./pages";
+import { Login, Chat } from "./pages";
 import RouteProtector from "./components/RouteProtector";
+import RouteProtectorLogin from "./components/RouteProtectorLogin";
 
 function App() {
 	return (
@@ -13,8 +14,14 @@ function App() {
 					</RouteProtector>
 				}
 			/>
-			<Route path="/login" element={<Login />} />
-			<Route path="/register" element={<Register />} />
+			<Route
+				path="/login"
+				element={
+					<RouteProtectorLogin>
+						<Login />
+					</RouteProtectorLogin>
+				}
+			/>
 		</Routes>
 	);
 }
